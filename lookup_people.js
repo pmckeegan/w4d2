@@ -19,18 +19,19 @@ let client = new pg.Client( config );
         return console.error("Connection Error", err);
         }
         console.log ('Searching.... '); 
-        client.query(`SELECT * FROM famous_people WHERE first_name LIKE CONCAT ( '%', $1::text, '%' )`, [name], function (err, result) {
-            if (err) {
-            return console.error("error running query", err);
-            }
-            console.log("Found", result.rows.length, "person(s) with the name", name, ":")
-            var count = 1
-            result.rows.forEach( function (row) {
-                let m = moment(row.birthday);
-                console.log ("- ", count++, ":", row.first_name, row.last_name, ", born",  m.format("YYYY-MM-DD"));
-            });
-            client.end();
-        });
+        client.query(`SELECT * FROM famous_people WHERE first_name LIKE CONCAT ( '%', $1::text, '%' )`, [name], displayNames);
     });
 
-
+function displayNames(err, result) {
+    if (err) {
+    return console.error("error running query", err);
+    }
+        console.log("Found", result.rows.length, "person(s) with the name", name, ":")
+    
+        var count = 1
+    result.rows.forEach( function (row) {
+        let m = moment(row.birthday);
+        console.log ("- ", count++, ":", row.first_name, row.last_name, ", born",  m.format("YYYY-MM-DD"));
+    });
+    client.end();
+};
