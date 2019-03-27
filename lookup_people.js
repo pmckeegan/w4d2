@@ -11,6 +11,7 @@ const config = {
 };
 
 const name = process.argv[ 2 ];
+
 let client = new pg.Client( config );
 
 
